@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NaturalSort
 {
     [Serializable()]
     class Record
     {
-        private double realPart, imaginaryPart;
-        public double modul; 
+        public double realPart { get; }
+        public double imaginaryPart { get; }
+        public double modul;
         public Record(double realPart, double imaginaryPart)
         {
             this.realPart = realPart;
@@ -21,7 +18,7 @@ namespace NaturalSort
 
         public override string ToString()
         {
-            return "{"+String.Format("\n r:{0}\n i:{1}\n m:{2}\n", realPart, imaginaryPart,modul)+"}";
+            return "{" + String.Format("\n r:{0}\n i:{1}\n m:{2}\n", realPart, imaginaryPart, modul) + "}";
         }
     }
 }
