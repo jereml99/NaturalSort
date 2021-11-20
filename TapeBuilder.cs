@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace NaturalSort
 {
-    class TapeBuilder
+    static class TapeBuilder
     {
-        static int range = 100;
+        static int rangeForRandom = 100;
         static public void MakeRandom(string path, int numberOfRecord)
         {
             Tape tape = new Tape(path);
@@ -17,7 +17,7 @@ namespace NaturalSort
 
             for (int i = 0; i < numberOfRecord; i++)
             {
-                records[i] = new Record(random.NextDouble() * range, random.NextDouble() * range);
+                records[i] = new Record(random.NextDouble() * rangeForRandom, random.NextDouble() * rangeForRandom);
             }
             tape.Write(records);
             tape.Close();

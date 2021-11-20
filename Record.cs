@@ -19,7 +19,12 @@ namespace NaturalSort
 
         public override string ToString()
         {
-            return "{" + String.Format("\n r:{0}\n i:{1}\n m:{2}\n", realPart, imaginaryPart, modul) + "}";
+            return "{" + String.Format("m:{2}\n r:{0}\n i:{1}\n ", realPart, imaginaryPart, modul) + "}";
+        }
+
+        public string ToShort()
+        {
+            return modul.ToString();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 
 namespace NaturalSort
 {
@@ -10,6 +11,7 @@ namespace NaturalSort
         private string path;
         private int writeAcces;
         private int readAcces;
+        private bool debug = false;
         public Tape(string path)
         {
             this.path = path;
@@ -21,13 +23,13 @@ namespace NaturalSort
             {
                 tapeWriter.Close();
                 tapeWriter = null;
-                Console.WriteLine("Closed BinaryWriter {0}", path);
+                if(debug) Console.WriteLine("Closed BinaryWriter {0}", path);
             }
             if (tapeReader != null)
             {
                 tapeReader.Close();
                 tapeReader = null;
-                Console.WriteLine("Closed BinaryReader {0}", path);
+                if (debug) Console.WriteLine("Closed BinaryReader {0}", path);
             }
         }
 
@@ -42,14 +44,14 @@ namespace NaturalSort
             {
                 tapeWriter.Close();
                 tapeWriter = null;
-                Console.WriteLine("Closed BinaryWriter {0}", path);
+                if (debug) Console.WriteLine("Closed BinaryWriter {0}", path);
             }
             if (tapeReader == null)
             {
                 tapeReader = new BinaryReader(File.Open(path, FileMode.OpenOrCreate));
-                Console.WriteLine("Opened BinaryReader {0}", path);
+                if (debug) Console.WriteLine("Opened BinaryReader {0}", path);
             }
-            Console.WriteLine("read from file {0}", path);
+            if (debug) Console.WriteLine("read from file {0}", path);
 
             int numberOfByte = buffer.Length * sizeof(double) * 2;
             byte[] byteBuffer = new byte[numberOfByte];
@@ -66,16 +68,28 @@ namespace NaturalSort
             {
                 tapeReader.Close();
                 tapeReader = null;
-                Console.WriteLine("Closed BinaryReader {0}", path);
+                if (debug) Console.WriteLine("Closed BinaryReader {0}", path);
             }
             if (tapeWriter == null)
             {
                 tapeWriter = new BinaryWriter(File.Create(path));
-                Console.WriteLine("Opened BinaryWriter {0}", path);
+                if (debug) Console.WriteLine("Opened BinaryWriter {0}", path);
             }
 
-            Console.WriteLine("write to file {0}", path);
+            if (debug) Console.WriteLine("write to file {0}", path);
             tapeWriter.Write(ConvertToBytes(buffer));
+        }
+
+        public void printTape()
+        {
+            Console.Write("Print {0} \n [", path);
+            Record[] buffer = new Record[1];
+            while(Read(ref buffer) > 0 )
+            {
+                Console.Write(buffer[0].ToShort() + " ");
+            }
+            Console.Write("]\n");
+            Close();
         }
 
         private Record[] ConvertToRecord(byte[] byteBuffer, int readByte)
@@ -94,7 +108,9 @@ namespace NaturalSort
 
         private byte[] ConvertToBytes(Record[] recordBuffer)
         {
-            int numberOfByte = recordBuffer.Length * sizeof(double) * 2;
+            int numberOfRecord = (from r in recordBuffer where r != null select r).Count();
+            int numberOfByte = numberOfRecord * sizeof(double) * 2;
+
             byte[] byteBuffer = new byte[numberOfByte];
             double[] doubleBuffer = new double[numberOfByte / sizeof(double)];
             int i = 0;
