@@ -10,15 +10,33 @@ namespace NaturalSort
         private string path;
         private int writeAcces;
         private int readAcces;
-
         public Tape(string path)
         {
             this.path = path;
-
-            tapeWriter = new BinaryWriter(File.OpenWrite(path));
         }
 
-        public void Read(Record[] buffer)
+        public void Close()
+        {
+            if (tapeWriter != null)
+            {
+                tapeWriter.Close();
+                tapeWriter = null;
+                Console.WriteLine("Closed BinaryWriter {0}", path);
+            }
+            if (tapeReader != null)
+            {
+                tapeReader.Close();
+                tapeReader = null;
+                Console.WriteLine("Closed BinaryReader {0}", path);
+            }
+        }
+
+        /// <summary>
+        /// Reads sequenc of bytes from tape 
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <returns>total number of byte read to the buffer</returns>
+        public int Read(ref Record[] buffer)
         {
             if (tapeWriter != null)
             {
@@ -32,10 +50,14 @@ namespace NaturalSort
                 Console.WriteLine("Opened BinaryReader {0}", path);
             }
             Console.WriteLine("read from file {0}", path);
+
             int numberOfByte = buffer.Length * sizeof(double) * 2;
             byte[] byteBuffer = new byte[numberOfByte];
-            tapeReader.Read(byteBuffer);
-            ConvertToRecord(byteBuffer).CopyTo(buffer, 0);
+
+            int readByte = tapeReader.Read(byteBuffer);
+            buffer = ConvertToRecord(byteBuffer, readByte);
+
+            return readByte;
         }
 
         public void Write(Record[] buffer)
@@ -48,7 +70,7 @@ namespace NaturalSort
             }
             if (tapeWriter == null)
             {
-                tapeWriter = new BinaryWriter(File.Open(path, FileMode.OpenOrCreate));
+                tapeWriter = new BinaryWriter(File.Create(path));
                 Console.WriteLine("Opened BinaryWriter {0}", path);
             }
 
@@ -56,14 +78,16 @@ namespace NaturalSort
             tapeWriter.Write(ConvertToBytes(buffer));
         }
 
-        private Record[] ConvertToRecord(byte[] byteBuffer)
+        private Record[] ConvertToRecord(byte[] byteBuffer, int readByte)
         {
             double[] doubleBuffer = new double[byteBuffer.Length / 8];
             Buffer.BlockCopy(byteBuffer, 0, doubleBuffer, 0, byteBuffer.Length);
             Record[] recordBuffer = new Record[doubleBuffer.Length / 2];
+
             for (int i = 0; i < recordBuffer.Length; i++)
             {
-                recordBuffer[i] = new Record(doubleBuffer[2 * i], doubleBuffer[2 * i + 1]);
+                if (i < readByte / Record.ByteForRecord) recordBuffer[i] = new Record(doubleBuffer[2 * i], doubleBuffer[2 * i + 1]);
+                else recordBuffer[i] = null;
             }
             return recordBuffer;
         }
@@ -76,8 +100,10 @@ namespace NaturalSort
             int i = 0;
             foreach (Record record in recordBuffer)
             {
+                if (record == null) break;
                 doubleBuffer[2 * i] = record.realPart;
                 doubleBuffer[2 * i + 1] = record.imaginaryPart;
+                i++;
             }
 
             Buffer.BlockCopy(doubleBuffer, 0, byteBuffer, 0, byteBuffer.Length);

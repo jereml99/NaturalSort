@@ -8,6 +8,7 @@ namespace NaturalSort
         public double realPart { get; }
         public double imaginaryPart { get; }
         public double modul;
+        public static int ByteForRecord = sizeof(double) * 2;
         public Record(double realPart, double imaginaryPart)
         {
             this.realPart = realPart;
