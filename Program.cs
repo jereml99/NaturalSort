@@ -7,10 +7,10 @@ namespace NaturalSort
         static string mainFile = "./tape3.bin";
         static void Main(string[] args)
         {
-
-
-            //TapeBuilder.MakeRandom(mainFile,10);
-            NaturalSort naturalSort = new NaturalSort(mainFile, 3);
+            int bufferSize = 1000000;
+            int recordInFile = 10000000;
+            TapeBuilder.MakeRandom(mainFile, recordInFile);
+            NaturalSort naturalSort = new NaturalSort(mainFile, bufferSize);
             naturalSort.SortTwoPlusOne();
         }
     }

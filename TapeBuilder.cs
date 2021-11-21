@@ -13,7 +13,7 @@ namespace NaturalSort
         {
             Tape tape = new Tape(path);
             Record[] records = new Record[numberOfRecord];
-            Random random = new Random();
+            Random random = new Random(1);
 
             for (int i = 0; i < numberOfRecord; i++)
             {

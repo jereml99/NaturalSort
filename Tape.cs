@@ -52,7 +52,6 @@ namespace NaturalSort
                 if (debug) Console.WriteLine("Opened BinaryReader {0}", path);
             }
             if (debug) Console.WriteLine("read from file {0}", path);
-
             int numberOfByte = buffer.Length * sizeof(double) * 2;
             byte[] byteBuffer = new byte[numberOfByte];
 
