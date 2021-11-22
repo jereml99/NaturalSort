@@ -5,7 +5,8 @@ namespace NaturalSort
     internal class MyBuffer
     {
         public int Length { get => buffer.Length; }
-
+        private int writeAcces;
+        private int readAcces;
         public Tape tape;
         private Record[] buffer;
         private int index = 0;
@@ -14,6 +15,8 @@ namespace NaturalSort
         {
             tape = new Tape(path);
             buffer = new Record[bufferSize];
+            writeAcces = 0;
+            readAcces = 0;
         }
         /// <summary>
         /// 
@@ -25,6 +28,7 @@ namespace NaturalSort
             {
                 if (tape.Read(ref buffer) > 0)
                 {
+                    readAcces++;
                     index = 0;
                     return buffer[index++];
                 }
@@ -52,9 +56,12 @@ namespace NaturalSort
 
         public void flush()
         {
+            writeAcces++;
             tape.Write(buffer);
             Array.Clear(buffer, 0, buffer.Length);
             index = 0;
         }
+
+        public int DiscAccesNumber() => writeAcces + readAcces;
     }
 }

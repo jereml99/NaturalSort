@@ -9,8 +9,6 @@ namespace NaturalSort
         private BinaryReader tapeReader;
         private BinaryWriter tapeWriter;
         private string path;
-        private int writeAcces;
-        private int readAcces;
         private bool debug = false;
         public Tape(string path)
         {

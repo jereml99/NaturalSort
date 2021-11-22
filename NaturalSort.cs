@@ -33,7 +33,8 @@ namespace NaturalSort
                 if (debug) Console.WriteLine("\t AFTER merg");
                 if (debug) mainBuffer.tape.printTape();
             }
-            Console.WriteLine("\n\n\t\t File SORTED AFTER {0}", phase);
+            int accesCount = mainBuffer.DiscAccesNumber() + buffer1.DiscAccesNumber() + buffer2.DiscAccesNumber();
+            Console.WriteLine("\n\n\t File SORTED AFTER {0} PHASES \n\t acces to file: {1}", phase, accesCount);
             if (debug) mainBuffer.tape.printTape();
         }
 
