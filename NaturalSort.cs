@@ -37,6 +37,9 @@ namespace NaturalSort
             int accesCount = mainBuffer.DiscAccesNumber() + buffer1.DiscAccesNumber() + buffer2.DiscAccesNumber();
             Console.WriteLine("\n\n\t File SORTED AFTER {0} PHASES \n\t acces to file: {1}", phase, accesCount);
             if (debug) mainBuffer.tape.printTape();
+            mainBuffer.Close();
+            buffer1.Close();
+            buffer2.Close();
         }
 
        
