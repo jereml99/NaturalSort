@@ -56,8 +56,12 @@ namespace NaturalSort
 
         public void flush()
         {
-            writeAcces++;
-            tape.Write(buffer);
+            if( buffer[0] != null )
+            {
+                // nie ma sensu pisać jak jest pusty buffor 
+                writeAcces++;
+                tape.Write(buffer);
+            }
             Array.Clear(buffer, 0, buffer.Length);
             index = 0;
         }

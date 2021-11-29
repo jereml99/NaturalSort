@@ -7,7 +7,7 @@ namespace NaturalSort
         private MyBuffer mainBuffer;
         private MyBuffer buffer1;
         private MyBuffer buffer2;
-        private bool debug = false;
+        private bool debug = true;
         public NaturalSort(string path, int bufferSize)
         {
             mainBuffer = new MyBuffer(path, bufferSize);
@@ -24,13 +24,14 @@ namespace NaturalSort
                 if (debug) Console.WriteLine("\n\n\t\t START PHASE {0}",phase);
 
                 if (debug) mainBuffer.tape.printTape();
-
-                if (Distribution()) break;
+                if (debug) Console.WriteLine();
+                Distribution();
                 if (debug) buffer1.tape.printTape();
                 if (debug) buffer2.tape.printTape();
 
-                merge();
-                if (debug) Console.WriteLine("\t AFTER merg");
+                if (merge()) break;
+                int accessNumber = mainBuffer.DiscAccesNumber() + buffer1.DiscAccesNumber() + buffer2.DiscAccesNumber();
+                if (debug) Console.WriteLine("\t AFTER merg, number of acces = {0}",accessNumber);
                 if (debug) mainBuffer.tape.printTape();
             }
             int accesCount = mainBuffer.DiscAccesNumber() + buffer1.DiscAccesNumber() + buffer2.DiscAccesNumber();
@@ -38,23 +39,19 @@ namespace NaturalSort
             if (debug) mainBuffer.tape.printTape();
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns>return true if file is allready sorted </returns>
-        private bool Distribution()
+       
+        private void Distribution()
         {
             Record lastRecord, record;
 
             lastRecord = new Record(0, 0);
             bool toFirstBuffer = true;
-            bool isSorted = true;
+            
 
             while ((record=mainBuffer.get()) != null)
             {
                 if(record.modul < lastRecord.modul)
                 {
-                    isSorted = false;
                     toFirstBuffer = !toFirstBuffer;
                 }
 
@@ -66,11 +63,15 @@ namespace NaturalSort
             buffer1.flush();
             buffer2.flush();
 
-            return isSorted;
         }
 
-        private void merge()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>return true if file is allready sorted </returns>
+        private bool merge()
         {
+            bool isSorted = true;
             Record fromBuffer1 = buffer1.get(); 
             Record fromBuffer2 = buffer2.get();
             Record nextInLine;
@@ -95,11 +96,11 @@ namespace NaturalSort
                
                 if (lastWriteFromBuffer1) // jak ostatnio pobrano z pierwszej taśmy, może inna nazwa?
                 {
-                    HandleRuns(ref fromBuffer1,ref fromBuffer2, ref nextInLine, ref buffer2, ref lastWriteFromBuffer1);
+                    HandleRuns(ref fromBuffer1,ref fromBuffer2, ref nextInLine, ref buffer2, ref lastWriteFromBuffer1, ref  isSorted);
                 }
                 else
                 {
-                    HandleRuns(ref fromBuffer2,ref fromBuffer1, ref nextInLine, ref buffer1, ref lastWriteFromBuffer1);    
+                    HandleRuns(ref fromBuffer2,ref fromBuffer1, ref nextInLine, ref buffer1, ref lastWriteFromBuffer1, ref  isSorted);    
                 }
             }
 
@@ -108,6 +109,10 @@ namespace NaturalSort
                 mainBuffer.add(fromBuffer2);
                 while((nextInLine = buffer2.get()) != null)
                 {
+                    if(nextInLine.modul < fromBuffer2.modul)
+                    {
+                        isSorted = false;
+                    }
                     mainBuffer.add(nextInLine);
                 }
             }
@@ -116,16 +121,23 @@ namespace NaturalSort
                 mainBuffer.add(fromBuffer1);
                 while ((nextInLine = buffer1.get()) != null)
                 {
+                    if (nextInLine.modul < fromBuffer1.modul)
+                    {
+                        isSorted = false;
+                    }
                     mainBuffer.add(nextInLine);
                 }
             }
             mainBuffer.flush();
+
+            return isSorted;
         }
 
-        private void HandleRuns(ref Record fromBuffer, ref Record secondFrombuffer, ref Record nextInLine, ref MyBuffer buffer, ref bool lastWriteFromBuffer1)
+        private void HandleRuns(ref Record fromBuffer, ref Record secondFrombuffer, ref Record nextInLine, ref MyBuffer buffer, ref bool lastWriteFromBuffer1, ref bool isSorted)
         {
             if (nextInLine != null && fromBuffer.modul > nextInLine.modul) // Patrzrymy czy nie ma końca serii
             {
+                isSorted = false;
                 fromBuffer = nextInLine;
 
                 nextInLine = buffer.get(); // lecimy do końca serii w drugiej taśmie

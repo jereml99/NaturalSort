@@ -23,7 +23,7 @@ namespace NaturalSort
             tape.Close();
         }
 
-        static public void MakeFromEntry(string path)
+        static public int MakeFromEntry(string path)
         {
             string input;
             double realPart, imaginaryPart;
@@ -45,7 +45,20 @@ namespace NaturalSort
             }
             tape.Write(records.ToArray());
             tape.Close();
+            return records.Count;
         }
 
+        static public void MakeWorstCase(string path, int numberOfRecord)
+        {
+            Tape tape = new Tape(path);
+            Record[] records = new Record[numberOfRecord];
+          
+            for (int i = 0; i < numberOfRecord; i++)
+            {
+                records[i] = new Record(numberOfRecord-i,0);
+            }
+            tape.Write(records);
+            tape.Close();
+        }
     }
 }
