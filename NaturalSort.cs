@@ -7,7 +7,7 @@ namespace NaturalSort
         private MyBuffer mainBuffer;
         private MyBuffer buffer1;
         private MyBuffer buffer2;
-        private bool debug = true;
+        private bool debug = false;
         public NaturalSort(string path, int bufferSize)
         {
             mainBuffer = new MyBuffer(path, bufferSize);
@@ -17,6 +17,9 @@ namespace NaturalSort
 
         public void SortTwoPlusOne()
         {
+            buffer1.ClearTape();
+            buffer2.ClearTape();
+
             int phase = 0;
             while(true)
             {
@@ -35,7 +38,9 @@ namespace NaturalSort
                 if (debug) mainBuffer.tape.printTape();
             }
             int accesCount = mainBuffer.DiscAccesNumber() + buffer1.DiscAccesNumber() + buffer2.DiscAccesNumber();
+            Console.WriteLine("#########STATS##########");
             Console.WriteLine("\n\n\t File SORTED AFTER {0} PHASES \n\t acces to file: {1}", phase, accesCount);
+            Console.WriteLine("#########STATS##########");
             if (debug) mainBuffer.tape.printTape();
             mainBuffer.Close();
             buffer1.Close();
@@ -97,7 +102,7 @@ namespace NaturalSort
                     nextInLine = buffer2.get();
                 }
                
-                if (lastWriteFromBuffer1) // jak ostatnio pobrano z pierwszej taśmy, może inna nazwa?
+                if (lastWriteFromBuffer1) // jak ostatnio pobrano z pierwszej taśmy
                 {
                     HandleRuns(ref fromBuffer1,ref fromBuffer2, ref nextInLine, ref buffer2, ref lastWriteFromBuffer1, ref  isSorted);
                 }

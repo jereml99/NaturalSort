@@ -29,10 +29,15 @@ namespace NaturalSort
                     TapeBuilder.MakeWorstCase(mainFile, recordInFile);
                     break;
                 case "3":
-                    TapeBuilder.MakeFromEntry(mainFile);
+                    recordInFile = TapeBuilder.MakeFromEntry(mainFile);
                     break;
                 case "4":
-                    throw new Exception("No implemented");
+                    Console.Write("Path: ");
+                    string path = Console.ReadLine();
+                    recordInFile = TapeBuilder.MakeFromFile(path,mainFile);
+                    break;
+                case "5":
+                    new Tape(mainFile).printTape();
                     break;
                 default:
                     throw new Exception("Bed command");
@@ -47,7 +52,8 @@ namespace NaturalSort
             NaturalSort naturalSort = new NaturalSort(mainFile, bufferSize);
 
             Console.WriteLine("N = {0} b= {1}",recordInFile,bufferSize);
-            Console.WriteLine("Teroetical max reads/writes acces: {0}", (int)(4 * recordInFile * Math.Log2(recordInFile) / bufferSize));
+            Console.WriteLine("Teroetical max reads/writes acces: {0}", Math.Ceiling(4 * recordInFile * Math.Log2(recordInFile) / bufferSize) );
+            Console.WriteLine("Teroetical max phase: {0}", Math.Ceiling(Math.Log2(recordInFile)));
             naturalSort.SortTwoPlusOne();
             
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,6 +22,30 @@ namespace NaturalSort
             }
             tape.Write(records);
             tape.Close();
+        }
+
+        static public int MakeFromFile(string srcPath, string outPath)
+        {
+            int numberOfRecords = -1;
+            using (StreamReader sr = File.OpenText(srcPath))
+            {
+
+                numberOfRecords = 0;
+                string s;
+                Tape tape = new Tape(outPath);
+                while ((s = sr.ReadLine()) != null)
+                {
+                    numberOfRecords++;
+                    s = s.Trim();
+                    string[]  entry =  s.Split(" ");
+                    Record[] records = {
+                        new Record(Double.Parse(entry[0]), Double.Parse(entry[1]))
+                    };
+                    tape.Write(records);
+                }
+                tape.Close();
+            }
+            return numberOfRecords;
         }
 
         static public int MakeFromEntry(string path)

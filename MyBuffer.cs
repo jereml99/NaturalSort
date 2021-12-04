@@ -68,6 +68,7 @@ namespace NaturalSort
 
         public int DiscAccesNumber() => writeAcces + readAcces;
 
+        public void ClearTape() => tape.Write(new Record[0]);
         public void Close()
         {
             tape.Close();
