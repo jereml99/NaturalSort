@@ -19,7 +19,7 @@ namespace NaturalSort
                 "2 Worst case records\n" +
                 "3 records from input\n" +
                 "4 from file\n" +
-                "5 print main\n");
+                "5 print main tape\n");
             switch (Console.ReadLine())
             {
                 case "1":
@@ -44,27 +44,27 @@ namespace NaturalSort
                     break;
                 case "5":
                     new Tape(mainFile).printTape();
-                    break;
+                    return;
                 default:
                     throw new Exception("Bad command");
                     break;
             }
 
 
-            Console.Write("\nBuffer size: ");
+            Console.Write("Buffer size: ");
             int bufferSize = int.Parse(Console.ReadLine());
 
 
             NaturalSort naturalSort = new NaturalSort(mainFile, bufferSize, debug);
 
-            Console.WriteLine("N = {0} b= {1}",recordInFile,bufferSize);
+            Console.WriteLine("\n\nN = {0} b= {1}",recordInFile,bufferSize);
         /*    Console.WriteLine("Teroetical max reads/writes acces: {0}", Math.Ceiling(4 * recordInFile * Math.Log2(recordInFile) / bufferSize) );
             Console.WriteLine("Teroetical max phase: {0}", Math.Ceiling(Math.Log2(recordInFile)));
 */
             int runsNumber = countRuns(mainFile);
             Console.WriteLine("Number of runs in file: {0}", runsNumber);
-            Console.WriteLine("Teroetical reads/writes acces: {0}", Math.Ceiling(4 * runsNumber * Math.Log2(runsNumber) / bufferSize));
-            Console.WriteLine("Teroetical phase: {0}", Math.Ceiling(Math.Log2(runsNumber)));
+            Console.WriteLine("Teroetical phase: {0}", Math.Round(Math.Log2(runsNumber),2));
+            Console.WriteLine("Teroetical reads/writes access: {0}", Math.Round(4 * recordInFile * Math.Log2(runsNumber) / bufferSize,2));
             naturalSort.SortTwoPlusOne();
             
         }

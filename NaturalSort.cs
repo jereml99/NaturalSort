@@ -35,12 +35,12 @@ namespace NaturalSort
 
                 if (merge()) break;
                 int accessNumber = mainBuffer.DiscAccesNumber() + buffer1.DiscAccesNumber() + buffer2.DiscAccesNumber();
-                if (debug) Console.WriteLine("\t AFTER merg, number of acces = {0}",accessNumber);
+                if (debug) Console.WriteLine("\t AFTER merg, number of access = {0}",accessNumber);
                 if (debug) mainBuffer.tape.printTape();
             }
             int accesCount = mainBuffer.DiscAccesNumber() + buffer1.DiscAccesNumber() + buffer2.DiscAccesNumber();
             Console.WriteLine("#########STATS##########");
-            Console.WriteLine("\t File SORTED AFTER {0} PHASES \n\t acces to file: {1}", phase, accesCount);
+            Console.WriteLine("\t File SORTED AFTER {0} PHASES \n\t Read/Write access to file: {1}", phase, accesCount);
             Console.WriteLine("#########STATS##########");
             if (debug) mainBuffer.tape.printTape();
             mainBuffer.Close();
