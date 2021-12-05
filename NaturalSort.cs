@@ -8,11 +8,12 @@ namespace NaturalSort
         private MyBuffer buffer1;
         private MyBuffer buffer2;
         private bool debug = false;
-        public NaturalSort(string path, int bufferSize)
+        public NaturalSort(string path, int bufferSize,bool debug)
         {
             mainBuffer = new MyBuffer(path, bufferSize);
             buffer1 = new MyBuffer("./tape1.bin", bufferSize);
             buffer2 = new MyBuffer("./tape2.bin", bufferSize);
+            this.debug = debug;
         }
 
         public void SortTwoPlusOne()
@@ -39,7 +40,7 @@ namespace NaturalSort
             }
             int accesCount = mainBuffer.DiscAccesNumber() + buffer1.DiscAccesNumber() + buffer2.DiscAccesNumber();
             Console.WriteLine("#########STATS##########");
-            Console.WriteLine("\n\n\t File SORTED AFTER {0} PHASES \n\t acces to file: {1}", phase, accesCount);
+            Console.WriteLine("\t File SORTED AFTER {0} PHASES \n\t acces to file: {1}", phase, accesCount);
             Console.WriteLine("#########STATS##########");
             if (debug) mainBuffer.tape.printTape();
             mainBuffer.Close();
